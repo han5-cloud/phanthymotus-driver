@@ -141,7 +141,18 @@ class R1DeviceBundle:
             from ext_devices import ExtCameraPlugin
             self._plugins.append(ExtCameraPlugin(plugins_cfg["ext_camera"], namespace, executor))
             print("[bundle] ExtCameraPlugin loaded")
-
+        # 先说话再举手的组合卡片。复用同一个 RpcProxy：arm 服务是租约制的，
+        # 另开 ArmClient 会和本 bundle 抢租约。
+        if plugins_cfg.get("speaker_raise", {}).get("enabled", False):
+            from device import LocoPlugin
+            from speaker_raise import SpeakerRaisePlugin
+            loco_plugin = next((p for p in self._plugins if getattr(p, 'PREFIX', '') == 'loco'), None)
+            self._plugins.append(SpeakerRaisePlugin(
+                plugins_cfg["speaker_raise"], loco_client,
+                arm_actions=LocoPlugin.ARM_NAME_TO_ID, loco_plugin=loco_plugin,
+            ))
+            print("[bundle] SpeakerRaisePlugin loaded")
+            
         # SmartMotion 统一打断控制（放在最后，需要引用其他 plugin）
         if plugins_cfg.get("smart_motion", {}).get("enabled", True):
             from device import SmartMotionPlugin
