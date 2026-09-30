@@ -36,3 +36,4 @@ cards:
   - { name: ext_mic,      type: sensor }
   - { name: ext_camera,   type: sensor }
   - { name: smart_motion, type: actuator }
+  - { name: speaker_raise, type: actuator }
