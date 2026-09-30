@@ -33,6 +33,12 @@ plugins:
     rotate_only: false
   state:
     enabled: true
+  speaker_raise:
+    enabled: true
+    tool_name: speaker_raise   # 考题要求显示名时改成 "speaker raise"，但会影响 LLM 调用
+    chars_per_s: 4.0           # 播报时长估算用，需在真机上用秒表标定
+    speak_margin_s: 0.8
+    require_upright: true      # 躺着 / 起身中 / 躺下中拒绝举手
   asr:
     enabled: true
   camera:
